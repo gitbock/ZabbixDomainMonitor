@@ -1,10 +1,10 @@
 {
   [
     {
-      domain: "www.bock-systems.de"
+      "domain": "www.bock-systems.de"
     },
     {
-      domain: "www.bb-itconsulting.com"
+      "domain": "www.bb-itconsulting.com"
     }
   ]
 }
