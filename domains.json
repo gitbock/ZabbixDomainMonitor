@@ -1,20 +1,19 @@
 {
 	"domains": [
-
 		{
-			"www.bock-systems.de": {
-				"description": "cool domain to check",
-				"check-enabled": "true"
-			},
-			"www.bb-itconsulting.com": {
-				"description": "second cool domain to check",
-				"check-enabled": "true"
-			},
-			"www.microsoft.com": {
-				"description": "Let's see how Microsoft Domain is configured",
-				"check-enabled": "false"
-			}
+			"domain": "www.bock-systems.de",
+			"description": "cool domain to check",
+			"check-enabled": "true"
+		},
+		{
+			"domain": "www.bb-itconsulting.com",
+			"description": "second cool domain to check",
+			"check-enabled": "true"
+		},
+		{
+			"domain": "www.microsoft.com",
+			"description": "Let's see how Microsoft Domain is configured",
+			"check-enabled": "false"
 		}
-
 	]
 }
