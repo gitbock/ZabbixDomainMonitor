@@ -13,6 +13,6 @@
       {
         "description": "Let's see how Microsoft Domain is configured",
         "check-enabled": "false"
-      },
+      }
     
   ]
