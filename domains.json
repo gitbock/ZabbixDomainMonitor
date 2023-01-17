@@ -13,7 +13,7 @@
 		{
 			"domain": "www.microsoft.com",
 			"description": "Let's see how Microsoft Domain is configured",
-			"cert_checks": true
+			"cert_checks": false
 		}
 	]
 }
