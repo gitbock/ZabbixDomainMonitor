@@ -3,12 +3,12 @@
 		{
 			"domain": "www.bock-systems.de",
 			"description": "cool domain to check",
-			"cert_checks": true
+			"cert_checks": false
 		},
 		{
 			"domain": "www.bb-itconsulting.com",
 			"description": "second cool domain to check",
-			"cert_checks": true
+			"cert_checks": false
 		},
 		{
 			"domain": "www.microsoft.com",
