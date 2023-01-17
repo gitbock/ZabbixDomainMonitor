@@ -14,6 +14,11 @@
 			"domain": "www.microsoft.com",
 			"description": "Let's see how Microsoft Domain is configured",
 			"cert_checks": false
+		},
+		{
+			"domain": "microsoft.com",
+			"description": "Checking DNS Mail Stuff of MS",
+			"mail_checks": true
 		}
 	]
 }
