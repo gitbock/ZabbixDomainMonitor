@@ -3,17 +3,17 @@
 		{
 			"domain": "www.bock-systems.de",
 			"description": "cool domain to check",
-			"enabled": true
+			"cert_checks": true
 		},
 		{
 			"domain": "www.bb-itconsulting.com",
 			"description": "second cool domain to check",
-			"enabled": true
+			"cert_checks": true
 		},
 		{
 			"domain": "www.microsoft.com",
 			"description": "Let's see how Microsoft Domain is configured",
-			"enabled": true
+			"cert_checks": true
 		}
 	]
 }
