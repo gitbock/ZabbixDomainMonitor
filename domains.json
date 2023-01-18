@@ -2,8 +2,8 @@
 	"domains": [
 		{
 			"domain": "www.bock-systems.de",
-			"description": "cool domain to check",
-			"cert_checks": true
+			"description": "cool subdomain to check",
+			"cert_checks": false
 		},
 		{
 			"domain": "bock-systems.de",
@@ -18,11 +18,16 @@
 		{
 			"domain": "www.microsoft.com",
 			"description": "Let's see how Microsoft Domain is configured",
-			"cert_checks": true
+			"cert_checks": false
 		},
 		{
 			"domain": "microsoft.com",
 			"description": "Checking DNS Mail Stuff of MS",
+			"dns_checks": false
+		},
+		{
+			"domain": "badssl.com",
+			"description": "Check bad domain",
 			"dns_checks": true
 		}
 	]
