@@ -18,7 +18,7 @@
 		{
 			"domain": "microsoft.com",
 			"description": "Checking DNS Mail Stuff of MS",
-			"mail_checks": true
+			"dns_checks": true
 		}
 	]
 }
