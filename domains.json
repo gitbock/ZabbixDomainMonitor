@@ -3,7 +3,12 @@
 		{
 			"domain": "www.bock-systems.de",
 			"description": "cool domain to check",
-			"cert_checks": false
+			"cert_checks": true
+		},
+		{
+			"domain": "bock-systems.de",
+			"description": "cool domain to check",
+			"dns_checks": true
 		},
 		{
 			"domain": "www.bb-itconsulting.com",
@@ -13,7 +18,7 @@
 		{
 			"domain": "www.microsoft.com",
 			"description": "Let's see how Microsoft Domain is configured",
-			"cert_checks": false
+			"cert_checks": true
 		},
 		{
 			"domain": "microsoft.com",
