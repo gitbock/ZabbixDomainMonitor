@@ -23,7 +23,7 @@
 		{
 			"domain": "microsoft.com",
 			"description": "Checking DNS Mail Stuff of MS",
-			"dns_checks": false
+			"dns_checks": true
 		},
 		{
 			"domain": "badssl.com",
