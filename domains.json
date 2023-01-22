@@ -1,0 +1,40 @@
+{
+	"domains": [
+		{
+			"domain": "www.bock-systems.de",
+			"description": "cool subdomain to check",
+			"cert_checks": true,
+			"dns_checks": false
+		},
+		{
+			"domain": "bock-systems.de",
+			"description": "cool domain to check",
+			"cert_checks": false,
+			"dns_checks": true
+		},
+		{
+			"domain": "www.bb-itconsulting.com",
+			"description": "second cool domain to check",
+			"cert_checks": true,
+			"dns_checks": false
+		},
+		{
+			"domain": "www.microsoft.com",
+			"description": "Let's see how Microsoft Domain is configured",
+			"cert_checks": false,
+			"dns_checks": false
+		},
+		{
+			"domain": "microsoft.com",
+			"description": "Checking DNS Mail Stuff of MS",
+			"cert_checks": false,
+			"dns_checks": true
+		},
+		{
+			"domain": "badssl.com",
+			"description": "Check bad domain",
+			"cert_checks": true,
+			"dns_checks": true
+		}
+	]
+}
