@@ -198,6 +198,21 @@ Additionally you can check the log file `log/dm.log`
 
 <br/>
 
+
+# Python Script standalone
+You may run the python script standalone from command line for testing or for just getting JSON output. Following parameters can be used
+|Parameter|Description|Example|Required|
+|---------|-----------------|----------------|--------|
+|-f|Domain file to download|`https://api.github.com/repos/gitbock/ZabbixDomainMonitor/contents/example_domains.json`|Yes|
+|-a|Github Token to download from private repo. Will be added as Authorization header when trying to download file|`github_pat_xxxxxxxxxxxx`|No|
+|-s|Zabbix Server IP to send results to|`127.0.0.1`|No|
+|-d|Zabbix Hostname which template is linked|`myAgent`|No|
+|--psk|The PSK needed to authenticate the agent against the server|`4DfD7fA90000000000000...00000000000`|No|
+|--psk-id|Id of PSK encrypted host.|`myAgent`|No|
+|--log-stdout|Logs not only go into log file but also printed to console while script is executing. Fur debug reaons||No|
+|-v|Verbose. Debug output in log file and stdout||No|
+
+
 ### Tested on
 - Ubuntu LTS 22
 - Zabbix 6.2 Server
