@@ -12,7 +12,7 @@
   - [Prerequisites](#prerequisites)
   - [Agent](#agent)
   - [Zabbix Server](#zabbix-server)
-- [Python Script standalone](#python-script-standalone)
+- [:fast\_forward: Python Script standalone](#fast_forward-python-script-standalone)
     - [Tested on](#tested-on)
 
 
@@ -214,7 +214,7 @@ Additionally you can check the log file `log/dm.log`
 <br/>
 
 
-# Python Script standalone
+# :fast_forward: Python Script standalone
 You may run the python script standalone from command line for testing or for just getting JSON output. Following parameters can be used
 |Parameter|Description|Example|Required|
 |---------|-----------------|----------------|--------|
