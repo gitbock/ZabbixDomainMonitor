@@ -25,10 +25,8 @@ Check results can be sent to Zabbix server updating items.
 ### Host Config after LLD
 ![](doc/host_config.png)  
   
- <pre> 
-
-
- </pre>
+<br/>
+<br/>
 
 > :information_source:
 Script can also run without Zabbix. Only JSON output is generated in log file then.

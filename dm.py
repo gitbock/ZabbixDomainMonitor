@@ -21,10 +21,14 @@ import sslpsk
 import functools
 import dns.resolver
 
-def domain_exists(domain_name):
+def domain_a_record_exists(domain_name):
+    """
+    Check if A record of domains exists
+    """
+        
     try:
         resolver = dns.resolver.Resolver(configure=True)
-        answer = resolver.resolve(domain_name, "A")
+        resolver.resolve(domain_name, "A")
         return True
     except dns.resolver.NXDOMAIN:
         return False
@@ -32,6 +36,36 @@ def domain_exists(domain_name):
         return False
     except dns.resolver.NoNameservers:
         return False
+
+def domain_mx_record_exists(domain_name):
+    """
+    Check if MX record of domains exists
+    """
+        
+    try:
+        resolver = dns.resolver.Resolver(configure=True)
+        resolver.resolve(domain_name, "MX")
+        return True
+    except dns.resolver.NXDOMAIN:
+        return False
+    except dns.resolver.NoAnswer:
+        return False
+    except dns.resolver.NoNameservers:
+        return False    
+    
+
+def domain_exists(domain_name):
+    """
+    Tries to find out if domain exists leveraging different checks
+    """
+    if domain_a_record_exists(domain_name):
+        return True
+    if domain_mx_record_exists(domain_name):
+        return True
+    else:
+        return False
+    
+    
         
     
     
@@ -371,7 +405,7 @@ def main():
     # read and parse domain file
     domains_with_check_results = get_domain_file(dm_args)
 
-    # Main loop executing checks for each domain
+    ### Main loop executing checks for each domain
     for entry in domains_with_check_results['domains']:
         if not 'check_results' in entry:
             entry['check_results'] = {}
