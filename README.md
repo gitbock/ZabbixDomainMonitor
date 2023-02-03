@@ -1,5 +1,20 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/gitbock/ZabbixDomainMonitor/badge.svg)
 
+- [ZabbixDomainMonitor](#zabbixdomainmonitor)
+  - [Supported Checks](#supported-checks)
+  - [:chart: Zabbix Monitoring](#chart-zabbix-monitoring)
+    - [Trigger Overview](#trigger-overview)
+    - [Latest Data](#latest-data)
+    - [Host Config after LLD](#host-config-after-lld)
+- [:triangular\_ruler: General Workflow](#triangular_ruler-general-workflow)
+  - [Technical (Zabbix) Details](#technical-zabbix-details)
+- [:computer: Install](#computer-install)
+  - [Prerequisites](#prerequisites)
+  - [Agent](#agent)
+  - [Zabbix Server](#zabbix-server)
+- [Python Script standalone](#python-script-standalone)
+    - [Tested on](#tested-on)
+
 
 # ZabbixDomainMonitor
 
