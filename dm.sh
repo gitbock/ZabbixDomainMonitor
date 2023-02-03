@@ -6,7 +6,7 @@
 DMPATH=/opt/ZabbixDomainMonitor
 cd $DMPATH
 
-# uncomment follwoing lines for debug to log file
+# uncomment following lines for debug to log file
 
 #TS=$(date)
 #WD=`pwd`

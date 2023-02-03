@@ -43,13 +43,13 @@
 			"dns_checks": false
 		},
 		{
-			"domain": "non-existent-with-cert-checks-enabled",
+			"domain": "non-existent-with-cert-checks-enabled.com",
 			"description": "test NX domain",
 			"cert_checks": true,
 			"dns_checks": false
 		},
 		{
-			"domain": "non-existent-with-dns-checks-enabled",
+			"domain": "non-existent-with-dns-checks-enabled.com",
 			"description": "test NX domain",
 			"cert_checks": false,
 			"dns_checks": true
