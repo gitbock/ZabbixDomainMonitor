@@ -1,3 +1,6 @@
+![Known Vulnerabilities](https://snyk.io/test/github/gitbock/ZabbixDomainMonitor/badge.svg)
+(https://snyk.io/test/github/gitbock/ZabbixDomainMonitor)
+
 # ZabbixDomainMonitor
 
 Zabbix Template and Script: Executes the following checks on a list of domains in JSON file, add check results to JSON and sends the result of each check to Zabbix, updating status of items.
