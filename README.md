@@ -1,5 +1,5 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/gitbock/ZabbixDomainMonitor/badge.svg)
-(https://snyk.io/test/github/gitbock/ZabbixDomainMonitor)
+
 
 # ZabbixDomainMonitor
 
