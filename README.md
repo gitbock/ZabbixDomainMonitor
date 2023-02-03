@@ -37,11 +37,11 @@ Check results can be sent to Zabbix server updating items.
 ## :chart: Zabbix Monitoring
 
 ### Trigger Overview
-![](doc/example_dashboard.png)
+![](doc/img/example_dashboard.png)
 ### Latest Data
-![](doc/latest_data.png)
+![](doc/img/latest_data.png)
 ### Host Config after LLD
-![](doc/host_config.png)  
+![](doc/img/host_config.png)  
   
 <br/>
 <br/>
