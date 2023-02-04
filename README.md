@@ -1,6 +1,6 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/gitbock/ZabbixDomainMonitor/badge.svg)
 
-- [ZabbixDomainMonitor](#zabbixdomainmonitor)
+- [Overview](#overview)
   - [Supported Checks](#supported-checks)
   - [:chart: Zabbix Monitoring](#chart-zabbix-monitoring)
     - [Trigger Overview](#trigger-overview)
@@ -8,15 +8,19 @@
     - [Host Config after LLD](#host-config-after-lld)
 - [:triangular\_ruler: General Workflow](#triangular_ruler-general-workflow)
   - [Technical (Zabbix) Details](#technical-zabbix-details)
-- [:computer: Install](#computer-install)
+- [:computer: Setup](#computer-setup)
   - [Prerequisites](#prerequisites)
   - [Agent](#agent)
-  - [Zabbix Server](#zabbix-server)
+  - [Zabbix configuration](#zabbix-configuration)
+    - [Template links](#template-links)
+    - [Discovery rules](#discovery-rules)
+    - [Items collected](#items-collected)
+    - [Triggers](#triggers)
 - [:fast\_forward: Python Script standalone](#fast_forward-python-script-standalone)
     - [Tested on](#tested-on)
 
 
-# ZabbixDomainMonitor
+# Overview
 
 Zabbix Template and Script: Executes the following checks on a list of domains in JSON file, add check results to JSON and sends the result of each check to Zabbix, updating status of items.
 
@@ -119,7 +123,7 @@ Script can also run without Zabbix. Only JSON output is generated in log file th
 
 <br/><br/>
 
-# :computer: Install
+# :computer: Setup
 
 ## Prerequisites
 - Agent needs to be able to connect to Internet: DNS `udp/53`, HTTPS `tcp/443`
@@ -128,7 +132,9 @@ Script can also run without Zabbix. Only JSON output is generated in log file th
 <br/>
 
 ## Agent
+<details>
 Execute following scripts on command line to install Python Script on your Linux Agent
+
 
 >Create dirs
 ```console
@@ -196,12 +202,13 @@ zabbix@agent# /opt/ZabbixDomainMonitor/dm.sh <URL with domains.json>
 If you receive a `DM executed successfully` agent is ready :thumbsup:
 
 Additionally you can check the log file `log/dm.log`
+</details> 
 
 <br/><br/>
 
 
-## Zabbix Server
-1. Install Template by downloading and importing the [latest template file from this repo](https://github.com/gitbock/ZabbixDomainMonitor/blob/master/zabbix/dm_template.yaml) to your Zabbix Server.
+## Zabbix configuration
+1. Install Template by downloading and importing the [latest template file from this repo](https://github.com/gitbock/ZabbixDomainMonitor/blob/master/zabbix/template_domain_monitor.yaml) to your Zabbix Server.
 2. Link Template on host you installed the script
 3. Overwrite the {$DM_*} Macros on this host, reflecting your needs
 4. Execute "DomainMonitor discovery" manually with "Execute now" to populate the items immediately
@@ -209,7 +216,38 @@ Additionally you can check the log file `log/dm.log`
 6. Trigger the script by selecting the item "Execute DomainMonitor Script" with "Execute now" on the host.
 7. Watch Latest Data if items are populated
 
+<br/>
 
+### Template links
+[Zabbix Template](zabbix/template_domain_monitor.yaml)
+
+### Discovery rules
+|Name|Description|Type|Variables|
+|----|-----------|-----|--------|
+|DomainMonitor discovery|Downloads and parses domain file. Starting LLD|Script (JS)|`DM_DOMAIN_FILE`, `DM_GIT_TOKEN`|
+
+### Items collected
+All items are collected per domain.
+
+|Name|Description|
+|----|-----------|
+|Certificate Expire Days|Days before cert. expires. Can be configured by Macro `{$DM_CERT_EXPIRE_WARN_DAYS}` |
+|Certificate Issuer|Name of Issuer in Cert|
+|Certificate Trust|Status of Trust by common browsers (!= self signed)|
+|DMARC Status|Status of valid DMARC entry|
+|DNSSEC Status|Status of DNSSEC of domain|
+|SPF Status|Status of SPF entry of domain|
+
+<br/>
+
+### Triggers
+Each trigger is created per domain.
+|Name|Description|Default Severity|
+|----|-----------|-----------------|
+|Cert expires < days| Threshold of cert expire. Can be configured by macro `{$DM_CERT_EXPIRE_WARN_DAYS}` |`Average`|
+|Cert Not Trusted	|Cert not trusted by common browsers / self signed cert. detected|`Warning`|
+|No DMARC Record|DMARC entry was not detected for domain|`Warning`|
+|No SPF Record|No SPF record was detected for domain|`Warning`|
 
 <br/>
 
@@ -226,6 +264,7 @@ You may run the python script standalone from command line for testing or for ju
 |--psk-id|Id of PSK encrypted host.|`myAgent`|No|
 |--log-stdout|Logs not only go into log file but also printed to console while script is executing. Fur debug reaons||No|
 |-v|Verbose. Debug output in log file and stdout||No|
+
 
 
 ### Tested on
