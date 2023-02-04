@@ -21,6 +21,36 @@ import sslpsk
 import functools
 import dns.resolver
 
+
+class PyZabbixPSKSocketWrapper:
+    """Implements ssl.wrap_socket with PSK instead of certificates.
+    Proxies calls to a `socket` instance.
+    Needed for enabling sending encrypted results to Zabbix Server
+    """
+
+    def __init__(self, sock, *, identity, psk):
+        self.__sock = sock
+        self.__identity = identity
+        self.__psk = psk
+
+    def connect(self, *args, **kwargs):
+        # `sslpsk.wrap_socket` must be called *after* socket.connect,
+        # while the `ssl.wrap_socket` must be called *before* socket.connect.
+        self.__sock.connect(*args, **kwargs)
+
+        # `sslv3 alert bad record mac` exception means incorrect PSK
+        self.__sock = sslpsk.wrap_socket(
+            self.__sock,
+            # https://github.com/zabbix/zabbix/blob/f0a1ad397e5653238638cd1a65a25ff78c6809bb/src/libs/zbxcrypto/tls.c#L3231
+            ssl_version=ssl.PROTOCOL_TLSv1_2,
+            # https://github.com/zabbix/zabbix/blob/f0a1ad397e5653238638cd1a65a25ff78c6809bb/src/libs/zbxcrypto/tls.c#L3179
+            ciphers="PSK-AES128-CBC-SHA",
+            psk=(self.__psk, self.__identity),
+        )
+
+    def __getattr__(self, name):
+        return getattr(self.__sock, name)
+
 def domain_a_record_exists(domain_name):
     """
     Check if A record of domains exists
@@ -52,11 +82,10 @@ def domain_mx_record_exists(domain_name):
         return False
     except dns.resolver.NoNameservers:
         return False    
-    
 
 def domain_exists(domain_name):
     """
-    Tries to find out if domain exists leveraging different checks
+    Tries to find out if domain exists leveraging different DNS checks
     """
     if domain_a_record_exists(domain_name):
         return True
@@ -65,42 +94,6 @@ def domain_exists(domain_name):
     else:
         return False
     
-    
-        
-    
-    
-
-
-class PyZabbixPSKSocketWrapper:
-    """Implements ssl.wrap_socket with PSK instead of certificates.
-
-    Proxies calls to a `socket` instance.
-    """
-
-    def __init__(self, sock, *, identity, psk):
-        self.__sock = sock
-        self.__identity = identity
-        self.__psk = psk
-
-    def connect(self, *args, **kwargs):
-        # `sslpsk.wrap_socket` must be called *after* socket.connect,
-        # while the `ssl.wrap_socket` must be called *before* socket.connect.
-        self.__sock.connect(*args, **kwargs)
-
-        # `sslv3 alert bad record mac` exception means incorrect PSK
-        self.__sock = sslpsk.wrap_socket(
-            self.__sock,
-            # https://github.com/zabbix/zabbix/blob/f0a1ad397e5653238638cd1a65a25ff78c6809bb/src/libs/zbxcrypto/tls.c#L3231
-            ssl_version=ssl.PROTOCOL_TLSv1_2,
-            # https://github.com/zabbix/zabbix/blob/f0a1ad397e5653238638cd1a65a25ff78c6809bb/src/libs/zbxcrypto/tls.c#L3179
-            ciphers="PSK-AES128-CBC-SHA",
-            psk=(self.__psk, self.__identity),
-        )
-
-    def __getattr__(self, name):
-        return getattr(self.__sock, name)
-
-
 def get_domain_file(dm_args):
     """downloads json file with domain defintions
     """
@@ -109,6 +102,8 @@ def get_domain_file(dm_args):
 
     # Set header for retrieving raw contents from github. without only metadta received.
     headers['Accept'] = 'application/vnd.github.raw+json'
+    
+    # If provided, set Bearer token for authenticated download (Github personal access token)
     if dm_args.auth_token:
         headers['Authorization'] = f"Bearer {dm_args.auth_token}"
 
@@ -137,13 +132,6 @@ def check_cert_expire_days(domain_name):
         domain_name (str): domain name to connect and to check
     """
     check_result = {}
-    
-    if not domain_exists(domain_name):
-        l.warning("Error: Could not connect to %s", domain_name)
-        check_result['cert_expire_days'] = "Error: Could not connect"
-        check_result['cert_issuer'] = "Error: Could not connect"
-        return check_result
-    
     
     try:
         ctx = ssl.create_default_context()
@@ -182,21 +170,14 @@ def check_cert_expire_days(domain_name):
     return check_result
 
 
-
 def check_cert_trusted(domain_name):
     """Connects to hostname per https. If cert cannot be verified, return false.
 
     Args:
         domain_name (str): domain name to connect and to check
     """
-
     check_result = {}
     
-    if not domain_exists(domain_name):
-        l.warning("Error: Could not connect to %s", domain_name)
-        check_result['cert_trusted'] = "Error: Could not connect"
-        return check_result
-
     # Only try once
     s = requests.Session()
     retries = Retry(total=1)
@@ -207,6 +188,9 @@ def check_cert_trusted(domain_name):
         if r.ok:
             check_result['cert_trusted'] = True
             l.debug("Cert of %s is trusted", domain_name)
+        if r.status_code == 403:
+            check_result['cert_trusted'] = True
+            l.warning("Cert of %s is trusted, but connect was forbidden!", domain_name)
 
     except SSLError as e_ssl:
         l.warning("Cert of %s is NOT trusted", domain_name)
@@ -228,12 +212,6 @@ def check_spf_present(domain_name):
     
     check_result = {}
     
-    if not domain_exists(domain_name):
-        l.warning("Error: Could not connect to %s", domain_name)
-        check_result['spf_present'] = "Error: Could not connect"
-        return check_result
-        
-        
     try:
         spf_check_result = checkdmarc.query_spf_record(domain_name)
         l.info("Found SPF record for %s", domain_name)
@@ -279,11 +257,6 @@ def check_dnssec(domain_name):
         domain_name (str): Domain to check for DNSSEC
     """
     check_result = {}
-    if not domain_exists(domain_name):
-        l.warning("Error: Could not connect to %s", domain_name)
-        check_result['dnssec_enabled'] = "Error: Could not connect"
-        return check_result
-    
     dnssec_enabled = checkdmarc.test_dnssec(domain_name)
     if (dnssec_enabled):
         l.info("DNSSEC enabled for %s", domain_name)
@@ -350,8 +323,8 @@ def main():
     # Prepare arguments to be parsed
     argparser = argparse.ArgumentParser(
         prog='Zabbix Domain Monitor',
-        description='Fetches json with domains from URL and executes security checks for each domain. Sends results to Zabbix.',
-        epilog='Example: dm-check -f https://api.github.com/x/x/domains.json -a token123 -zs 192.168.100.50 -zh domainmontitor --std-out -v')
+        description='Fetches json with domains from URL and executes checks for each domain. Sends results to Zabbix.',
+        epilog='Example: dm-check -f https://api.github.com/x/x/domains.json -a token123 -s 192.168.100.50 -d agent --std-out -v')
     argparser.add_argument('-f', '--file-url', required=True,
                            help='URL to file with domain definitions')
     argparser.add_argument('-a', '--auth-token', required=False,
@@ -385,7 +358,7 @@ def main():
     if dm_args.verbose:
         l.setLevel(logging.DEBUG)
     else:
-        l.setLevel(logging.INFO)
+        l.setLevel(logging.CRITICAL)
 
     log_format = logging.Formatter(
         fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
@@ -407,15 +380,32 @@ def main():
 
     ### Main loop executing checks for each domain
     for entry in domains_with_check_results['domains']:
+        # prepare results branch
         if not 'check_results' in entry:
             entry['check_results'] = {}
         domain_name = entry['domain']
         l.debug("----- Checks for %s starting...", domain_name)
+        
+        # Only continue if domain exists / can be queried
+        if not domain_exists(domain_name):
+            l.error("Domain %s does not exist. Not executing checks.", domain_name)
+            error_str = "Error: Could not connect"
+            # add error as result for enabled checks
+            if 'cert_checks' in entry and entry['cert_checks']:
+                entry['check_results']['cert_expire_days'] = error_str
+                entry['check_results']['cert_issuer'] = error_str
+                entry['check_results']['cert_trusted']= error_str
+            if 'dns_checks' in entry and entry['dns_checks']:
+                entry['check_results']['spf_present']= error_str
+                entry['check_results']['dmarc_present']= error_str
+                entry['check_results']['dnssec_enabled']= error_str
+            # end loop for this domain
+            continue
+        
 
         # Execute Cert checks if enabled
         if 'cert_checks' in entry and entry['cert_checks']:
-            l.debug(
-                "Cert Checks for %s enabled, executing cert checks...", domain_name)
+            l.debug("Cert Checks for %s enabled, executing cert checks...", domain_name)
 
             # check domains for ssl cert validity
             l.debug("Checking validity for domain %s", domain_name)
@@ -447,7 +437,6 @@ def main():
 
     # If parameters are present, send results to Zabbix trapper items
     if dm_args.zabbix_server:
-        zserver = dm_args.zabbix_server.strip()
         if not dm_args.zabbix_host:
             l.error("Zabbix Host not set. Use -d <hostname> to set")
 
