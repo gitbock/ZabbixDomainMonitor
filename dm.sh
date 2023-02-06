@@ -15,10 +15,10 @@ cd $DMPATH
 #echo "Received parameters: $1 $2 $3 $4 $5 $6" >> log/dm-bash.log
 
 # Execute python script, handing over Parameters from Zabbix
-$DMPATH/.dmvenv/bin/python3 $DMPATH/dm.py -f "$1" -a "$2" -s "$3" -d "$4" --psk "$5" --psk-id "$6"
+#$DMPATH/.dmvenv/bin/python3 $DMPATH/dm.py -f "$1" -a "$2" -s "$3" -d "$4" --psk "$5" --psk-id "$6"
 
 # Use this for enable debug logs in script
-#$DMPATH/.dmvenv/bin/python3 $DMPATH/dm.py -f "$1" -a "$2" -s "$3" -d "$4" --psk "$5" --psk-id "$6" -v
+$DMPATH/.dmvenv/bin/python3 $DMPATH/dm.py -f "$1" -a "$2" -s "$3" -d "$4" --psk "$5" --psk-id "$6" -v
 
 
 # Print Return result -> displayed in Zabbix Item
