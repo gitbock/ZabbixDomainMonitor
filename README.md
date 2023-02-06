@@ -266,7 +266,12 @@ Each trigger is created per domain.
 
 
 # :fast_forward: Python Script standalone
-You may run the python script standalone from command line for testing or for just getting JSON output. Following parameters can be used
+You may run the python script standalone from command line for testing or for just getting JSON output.
+```console
+# /opt/ZabbixDomainMonitor/dm.py -f https://your-server.com/domains.json
+```
+
+Following parameters can be used
 |Parameter|Description|Example|Required|
 |---------|-----------------|----------------|--------|
 |-f|Domain file to download|GitHub Private Repo (Token needed, see "-a") <br/>`https://api.github.com/repos/gitbock/ZabbixDomainMonitor/contents/example_domains.json` <br/><br/>GitHub Public Repo<br/> `https://github.com/gitbock/ZabbixDomainMonitor/raw/master/example_domains.json`<br/> <br/>Regular HTTPS Server<br/> `https://your-server.com/domains.json` |Yes|
@@ -275,7 +280,7 @@ You may run the python script standalone from command line for testing or for ju
 |-d|Zabbix Hostname which template is linked|`myAgent`|No|
 |--psk|The PSK needed to authenticate the agent against the server|`4DfD7fA90000000000000...00000000000`|No|
 |--psk-id|Id of PSK encrypted host.|`myAgent`|No|
-|--log-stdout|Logs not only go into log file but also printed to console while script is executing. Fur debug reaons||No|
+|--log-stdout|Logs not only go into log file `log/dm.log` but also printed to console while script is executing. Fur debug reaons||No|
 |-v|Verbose. Debug output in log file and stdout||No|
 
 
