@@ -17,7 +17,7 @@ py-zabbix==1.1.7
 pycparser==2.21
 pyleri==1.4.1
 pylint==2.15.10
-requests==2.28.2
+requests==2.31.0
 sslpsk==1.0.0
 timeout-decorator==0.5.0
 tomli==2.0.1
