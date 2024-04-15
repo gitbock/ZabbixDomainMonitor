@@ -7,7 +7,7 @@ cryptography==39.0.1
 dill==0.3.6
 dnspython==2.3.0
 expiringdict==1.2.2
-idna==3.4
+idna==3.7
 isort==5.11.4
 lazy-object-proxy==1.9.0
 mccabe==0.7.0
